@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  description: |
+    Microservicio de recomendaciones y visualizaciones para TubeFlix. Este servicio proporciona recomendaciones generales, personalizadas y un buscador de videos por título.
+  title: TubeFlix - Recomendaciones y Visualizaciones - OpenAPI 3.0
+  version: 1.0.0
+servers:
+- url: /
+tags:
+- description: Endpoints de recomendaciones generales y personalizadas
+  name: home
+paths:
+  /home/popular:
+    get:
+      description: Obtiene una lista de videos populares basados en visualizaciones
+        generales.
+      operationId: getPopularVideos
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Lista de videos populares obtenida exitosamente
+        "500":
+          description: Error al obtener los videos populares
+      summary: Recomendaciones de videos populares
+      tags:
+      - home
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: home
+  /home/genres:
+    get:
+      description: Obtiene una lista de videos recomendados por género.
+      operationId: getVideosByGenre
+      parameters:
+      - description: Género para filtrar los videos
+        explode: true
+        in: query
+        name: genre
+        required: true
+        schema:
+          example: comedy
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Lista de videos filtrados por género obtenida exitosamente
+        "400":
+          description: Género no válido
+        "500":
+          description: Error al obtener los videos por género
+      summary: Recomendaciones por género
+      tags:
+      - home
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: home
+  /home/duration:
+    get:
+      description: Obtiene una lista de videos filtrados por duración.
+      operationId: getVideosByDuration
+      parameters:
+      - description: Duración mínima del video en minutos
+        explode: true
+        in: query
+        name: minDuration
+        required: true
+        schema:
+          example: 5
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Lista de videos filtrados por duración obtenida exitosamente
+        "400":
+          description: Parámetros de duración no válidos
+        "500":
+          description: Error al obtener los videos por duración
+      summary: Recomendaciones por duración
+      tags:
+      - home
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: home
+  /home/followingProfiles:
+    get:
+      description: Obtiene recomendaciones basadas en los videos de perfiles seguidos
+        por el usuario. El usuario debe haber iniciado sesion.
+      operationId: getVideosFromFollowingProfiles
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Lista de videos de perfiles seguidos obtenida exitosamente
+        "401":
+          description: No autorizado. Se requiere autenticación.
+        "500":
+          description: Error al obtener videos de perfiles seguidos
+      summary: Recomendaciones de videos basadas en perfiles seguidos
+      tags:
+      - home
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: home
+  /home/search:
+    get:
+      description: Busca videos por título y devuelve resultados coincidentes.
+      operationId: searchVideosByTitle
+      parameters:
+      - description: Título del video a buscar
+        explode: true
+        in: query
+        name: title
+        required: true
+        schema:
+          example: Funny Cats
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Video'
+                type: array
+          description: Lista de videos coincidentes con el título
+        "400":
+          description: Parámetro de título no válido
+        "404":
+          description: No se encontraron videos coincidentes
+        "500":
+          description: Error al realizar la búsqueda
+      summary: Búsqueda de videos por título
+      tags:
+      - home
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: home
+components:
+  schemas:
+    Video:
+      example:
+        duration: duration
+        ageRestricted: true
+        uploadDate: 2000-01-23T04:56:07.000+00:00
+        countryRestricted:
+        - countryRestricted
+        - countryRestricted
+        genre: genre
+        description: description
+        id: 0
+        title: title
+        user: 1
+        likes: 6
+      properties:
+        id:
+          description: ID único del video (clave primaria).
+          format: int64
+          type: integer
+        duration:
+          description: Duración del video en formato HH:MM:SS.
+          type: string
+        title:
+          description: Título del video.
+          type: string
+        uploadDate:
+          description: Fecha y hora de subida del video.
+          format: date-time
+          type: string
+        description:
+          description: Descripción del video.
+          type: string
+        genre:
+          description: Género del video.
+          type: string
+        likes:
+          description: Número de "me gustas" para el video.
+          format: int32
+          type: integer
+        ageRestricted:
+          description: Indica si el contenido está restringido para usuarios mayores
+            de edad.
+          type: boolean
+        countryRestricted:
+          description: Lista de países a los que se restringe el acceso al video.
+          items:
+            type: string
+          type: array
+        user:
+          description: Clave que referencia al usuario que ha subido el video.
+          format: int32
+          type: integer
+      type: object
