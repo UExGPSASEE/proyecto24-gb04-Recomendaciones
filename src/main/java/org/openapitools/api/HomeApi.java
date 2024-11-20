@@ -262,5 +262,50 @@ public interface HomeApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
+    
+    /**
+     * GET /home/video/{id}/countLikes : Contar likes de un video
+     * Devuelve el número de likes de un video específico.
+     *
+     * @param id ID del video para el cual contar los likes (required)
+     * @return Número de likes del video (status code 200)
+     *         or ID del video no válido (status code 400)
+     *         or No se encontró el video (status code 404)
+     *         or Error al contar los likes (status code 500)
+     */
+    @Operation(
+        operationId = "countLikesByVideoId",
+        summary = "Contar likes de un video",
+        description = "Devuelve el número de likes de un video específico.",
+        tags = { "home" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Número de likes del video", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "ID del video no válido"),
+            @ApiResponse(responseCode = "404", description = "No se encontró el video"),
+            @ApiResponse(responseCode = "500", description = "Error al contar los likes")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/home/video/{id}/countLikes",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Integer> countLikesByVideoId(
+        @NotNull @Parameter(name = "id", description = "ID del video para el cual contar los likes", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "42";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
 
 }
