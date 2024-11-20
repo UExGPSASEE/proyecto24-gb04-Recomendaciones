@@ -1,16 +1,18 @@
 package org.openapitools.model;
 
 import java.net.URI;
+import java.sql.Timestamp;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +25,7 @@ import javax.annotation.Generated;
  * Video
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-16T17:45:57.620163600+02:00[Europe/Madrid]", comments = "Generator version: 7.9.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-15T15:54:30.961535300+02:00[Europe/Madrid]", comments = "Generator version: 7.9.0")
 public class Video {
 
   private Long id;
@@ -33,7 +35,8 @@ public class Video {
   private String title;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime uploadDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+  private Timestamp uploadDate;
 
   private String description;
 
@@ -44,9 +47,9 @@ public class Video {
   private Boolean ageRestricted;
 
   @Valid
-  private List<String> countryRestricted = new ArrayList<>();
+  private ArrayList<String> countryRestricted = new ArrayList<>();
 
-  private Integer user;
+  private Integer video_user;
 
   public Video id(Long id) {
     this.id = id;
@@ -108,7 +111,7 @@ public class Video {
     this.title = title;
   }
 
-  public Video uploadDate(OffsetDateTime uploadDate) {
+  public Video uploadDate(Timestamp uploadDate) {
     this.uploadDate = uploadDate;
     return this;
   }
@@ -120,11 +123,11 @@ public class Video {
   @Valid 
   @Schema(name = "uploadDate", description = "Fecha y hora de subida del video.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("uploadDate")
-  public OffsetDateTime getUploadDate() {
+  public Timestamp getUploadDate() {
     return uploadDate;
   }
 
-  public void setUploadDate(OffsetDateTime uploadDate) {
+  public void setUploadDate(Timestamp uploadDate) {
     this.uploadDate = uploadDate;
   }
 
@@ -208,7 +211,7 @@ public class Video {
     this.ageRestricted = ageRestricted;
   }
 
-  public Video countryRestricted(List<String> countryRestricted) {
+  public Video countryRestricted(ArrayList<String> countryRestricted) {
     this.countryRestricted = countryRestricted;
     return this;
   }
@@ -232,28 +235,28 @@ public class Video {
     return countryRestricted;
   }
 
-  public void setCountryRestricted(List<String> countryRestricted) {
+  public void setCountryRestricted(ArrayList<String> countryRestricted) {
     this.countryRestricted = countryRestricted;
   }
 
-  public Video user(Integer user) {
-    this.user = user;
+  public Video video_user(Integer video_user) {
+    this.video_user = video_user;
     return this;
   }
 
   /**
    * Clave que referencia al usuario que ha subido el video.
-   * @return user
+   * @return video_user
    */
   
-  @Schema(name = "user", description = "Clave que referencia al usuario que ha subido el video.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("user")
+  @Schema(name = "video_user", description = "Clave que referencia al usuario que ha subido el video.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("video_user")
   public Integer getUser() {
-    return user;
+    return video_user;
   }
 
-  public void setUser(Integer user) {
-    this.user = user;
+  public void setUser(Integer video_user) {
+    this.video_user = video_user;
   }
 
   @Override
@@ -274,12 +277,12 @@ public class Video {
         Objects.equals(this.likes, video.likes) &&
         Objects.equals(this.ageRestricted, video.ageRestricted) &&
         Objects.equals(this.countryRestricted, video.countryRestricted) &&
-        Objects.equals(this.user, video.user);
+        Objects.equals(this.video_user, video.video_user);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, duration, title, uploadDate, description, genre, likes, ageRestricted, countryRestricted, user);
+    return Objects.hash(id, duration, title, uploadDate, description, genre, likes, ageRestricted, countryRestricted, video_user);
   }
 
   @Override
@@ -295,7 +298,7 @@ public class Video {
     sb.append("    likes: ").append(toIndentedString(likes)).append("\n");
     sb.append("    ageRestricted: ").append(toIndentedString(ageRestricted)).append("\n");
     sb.append("    countryRestricted: ").append(toIndentedString(countryRestricted)).append("\n");
-    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    video_user: ").append(toIndentedString(video_user)).append("\n");
     sb.append("}");
     return sb.toString();
   }
