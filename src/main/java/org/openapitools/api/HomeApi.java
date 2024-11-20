@@ -262,5 +262,201 @@ public interface HomeApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }
+    
+    /**
+     * GET /home/video/{id}/countLikes : Contar likes de un video
+     * Devuelve el número de likes de un video específico.
+     *
+     * @param id ID del video para el cual contar los likes (required)
+     * @return Número de likes del video (status code 200)
+     *         or ID del video no válido (status code 400)
+     *         or No se encontró el video (status code 404)
+     *         or Error al contar los likes (status code 500)
+     */
+    @Operation(
+        operationId = "countLikesByVideoId",
+        summary = "Contar likes de un video",
+        description = "Devuelve el número de likes de un video específico.",
+        tags = { "home" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Número de likes del video", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "ID del video no válido"),
+            @ApiResponse(responseCode = "404", description = "No se encontró el video"),
+            @ApiResponse(responseCode = "500", description = "Error al contar los likes")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/home/video/{id}/countLikes",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Integer> countLikesByVideoId(
+        @NotNull @Parameter(name = "id", description = "ID del video para el cual contar los likes", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType : MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "42";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * GET /home/history : Obtener el historial de videos de un usuario
+     * Devuelve una lista de videos que el usuario ha visto.
+     *
+     * @param username El nombre de usuario cuyo historial de videos se desea obtener (required)
+     * @return Lista de videos del historial del usuario (status code 200)
+     *         or Nombre de usuario no válido (status code 400)
+     *         or No se encontraron videos (status code 404)
+     *         or Error al obtener el historial de videos (status code 500)
+     */
+    @Operation(
+        operationId = "getUserVideoHistory",
+        summary = "Obtener el historial de videos de un usuario",
+        description = "Devuelve una lista de videos que el usuario ha visto, según su historial.",
+        tags = { "home" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Historial de videos del usuario", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Nombre de usuario no válido"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron videos para el usuario"),
+            @ApiResponse(responseCode = "500", description = "Error al obtener el historial de videos")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/home/{username}/history",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<Video>> getUserVideoHistory(
+        @NotNull @Parameter(name = "username", description = "Nombre del usuario", required = true, in = ParameterIn.QUERY) 
+        @PathVariable("username") String username
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * GET /home/video/{id}/views : Obtiene el número de views de un video por su ID.
+     *
+     * @param id ID del video
+     * @return Número de views del video especificado (status code 200)
+     *         or Invalid ID supplied (status code 400)
+     *         or Video not found (status code 404)
+     */
+    @Operation(
+        operationId = "countViewsByVideoId",
+        summary = "Obtiene el número de views de un video por su ID",
+        description = "Devuelve el total de views que tiene el video especificado por su ID.",
+        tags = { "video" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
+            @ApiResponse(responseCode = "404", description = "Video not found")
+        }
+    )
+    @GetMapping(
+        value = "/home/video/{id}/views",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Long> countViewsByVideoId(
+      @NotNull @Parameter(name = "id", description = "ID del video para el cual contar los views", required = true, in = ParameterIn.PATH) @PathVariable("id") Long id
+
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * GET /home/topVideos : Obtiene el top de videos ordenados por número de vistas.
+     *
+     * @return Lista de videos ordenados por número de vistas (status code 200)
+     *         or Error interno del servidor (status code 500)
+     */
+    @Operation(
+        operationId = "getTopVideos",
+        summary = "Obtiene el top de videos ordenados por número de vistas",
+        description = "Devuelve una lista de videos ordenados de mayor a menor según el número de vistas.",
+        tags = { "home" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        }
+    )
+    @GetMapping(
+        value = "/home/topVideos",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<Video>> getTopVideos() {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * GET /home/user/{username}/recommendations : Obtiene recomendaciones de videos para un usuario específico.
+     *
+     * @param username Nombre de usuario para el cual se generan las recomendaciones
+     * @return Lista de videos recomendados para el usuario (status code 200)
+     *         or Usuario no encontrado (status code 404)
+     *         or Error interno del servidor (status code 500)
+     */
+    @Operation(
+        operationId = "getRecommendationsByUsername",
+        summary = "Obtiene recomendaciones de videos para un usuario específico",
+        description = "Devuelve una lista de videos recomendados basada en el nombre de usuario proporcionado.",
+        tags = { "home", "recommendations" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        }
+    )
+    @GetMapping(
+        value = "/home/user/{username}/recommendations",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<Video>> getRecommendationsByUsername(
+        @NotNull @Parameter(name = "username", description = "Nombre de usuario para el cual se generan las recomendaciones", required = true, in = ParameterIn.PATH) 
+        @PathVariable("username") String username
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * GET /home/user/{username}/following : Obtiene videos de los usuarios que sigue un usuario específico.
+     *
+     * @param username Nombre de usuario para el cual se obtienen los videos de los usuarios seguidos
+     * @return Lista de videos de los usuarios seguidos (status code 200)
+     *         or Usuario no encontrado (status code 404)
+     *         or Error interno del servidor (status code 500)
+     */
+    @Operation(
+        operationId = "getVideosByFollowing",
+        summary = "Obtiene videos de los usuarios que sigue un usuario específico",
+        description = "Devuelve una lista de videos de los usuarios que el usuario proporcionado sigue.",
+        tags = { "home", "following" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        }
+    )
+    @GetMapping(
+        value = "/home/user/{username}/following",
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<Video>> getVideosByFollowing(
+        @NotNull @Parameter(name = "username", description = "Nombre de usuario para el cual se obtienen los videos de los usuarios seguidos", required = true, in = ParameterIn.PATH) 
+        @PathVariable("username") String username
+    ) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+
 
 }
